@@ -4,7 +4,6 @@ const  userSchema = mongoose.Schema({
     name: {
         type: String,
         required: [true, "Por favor teclea tu nombre"],
-        //unique: true
     },
     email: {
         type: String,
