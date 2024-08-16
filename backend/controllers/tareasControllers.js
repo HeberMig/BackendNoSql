@@ -24,23 +24,38 @@ const createTareas = asyncHandler(async (req, res) => {
 })
 
 const updateTareas =  asyncHandler(async (req, res) => {
+    
+    //verificamos que exista la tarea
     const tarea = await Tarea.findById(req.params.id)
+    
     if(!tarea){
         res.status(400)
         throw new Error('Tarea no encontrada')
         }
+if(tarea.user.toString() !== req.user.id){
+    res.status(401)
+    throw new Error('Usuario no autorizado')
+} else {
     const tareaUpdate = await Tarea.findByIdAndUpdate(req.params.id, req.body, {new: true})
     res.status(200).json(tareaUpdate)
+}
+
 })
 
 const deleteTareas = asyncHandler(async (req, res) => {
     const tarea = await Tarea.findById(req.params.id)
+    
     if(!tarea){
         res.status(400)
         throw new Error('Tarea no encontrada')
         }
-        await tarea.deleteOne()
-        res.status(200).json({ id: req.params.id })
+if(tarea.user.toString() !== req.user.id){
+    res.status(401)
+    throw new Error('Usuario no autorizado')
+} else {
+    await tarea.deleteOne()
+    res.status(200).json({ id: req.params.id})
+}
 })
 
 module.exports = {
